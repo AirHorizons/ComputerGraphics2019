@@ -1,2 +1,2 @@
-run : spacestone.py
-	python spacestone.py
+run : hw01.py
+	python hw01.py
