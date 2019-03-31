@@ -163,7 +163,7 @@ if __name__ == '__main__':
     glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH | GLUT_ALPHA)
     glutInitWindowSize(width, height)
     glutInitWindowPosition(0, 0)
-    window = glutCreateWindow("웃음참기 lv.10")
+    window = glutCreateWindow("HOP HOP HOP!")
     glClearColor(0.0, 0.0, 0.0, 1.0)
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
