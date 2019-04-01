@@ -14,6 +14,8 @@ degree = 0.0
 ROTATION_SPEED = 0.03 # modify to change speed of jumping
 ROTATION_DIR = 1
 MOVEMENT = 1
+
+rd, gr, bl = 1, 1, 1
         
 
 def doKeyboard(*args):
@@ -23,7 +25,7 @@ def doKeyboard(*args):
         sys.exit()
     glutPostRedisplay()
 
-def drawhead():
+def drawhead(rd, gr, bl):
     global l, s, ds
     s += 0.001 * ds
     if s >= 0.3:
@@ -57,21 +59,21 @@ def drawhead():
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE)
-    glColor4f(1.0, 1.0, 1.0, 0.7)
+    glColor4f(rd, gr, bl, 0.7)
     glLineWidth(2.5)
     for i in range(32):
         glBegin(GL_LINES)
         for j in range(2):
             glVertex3fv(vertices[edges[i][j]])
         glEnd()
-    glColor4f(1.0, 1.0, 1.0, 0.3)
+    glColor4f(rd, gr, bl, 0.7)
     for i in range(12):
         glBegin(GL_POLYGON)
         for j in range(5):
             glVertex3fv(vertices[faces[i][j]])
         glEnd()
 
-def drawbody(a, b, c):
+def drawbody(a, b, c, rd = 1.0, gr = 1.0, bl = 1.0):
     vertices = [
             [a, b, c], [a, b, -c], [-a, b, -c], [-a, b, c],
             [a, -b, c], [a, -b, -c], [-a, -b, -c], [-a, -b, c],
@@ -85,35 +87,35 @@ def drawbody(a, b, c):
     faces = [
             [0, 1, 2, 3, 0], [4, 5, 6, 7, 4], [0, 1, 5, 4, 0], [2, 3, 7, 6, 2], [1, 2, 6, 5, 1], [3, 0, 4, 7, 3]
             ]
-    glColor4f(1.0, 1.0, 1.0, 0.7)
+    glColor4f(rd, gr, bl, 0.7)
     glLineWidth(2.5)
     for i in range(12):
         glBegin(GL_LINES)
         for j in range(2):
             glVertex3fv(vertices[edges[i][j]])
         glEnd()
-    glColor4f(1.0, 1.0, 1.0, 0.3)
+    glColor4f(rd, gr, bl, 0.3)
     for i in range(6):
         glBegin(GL_POLYGON)
         for j in range(5):
             glVertex3fv(vertices[faces[i][j]])
         glEnd()
 
-def drawlimb(a, b, c, theta = 0):
+def drawlimb(a, b, c, theta = 0, rd = 1.0, gr = 1.0, bl = 1.0):
     global MOVEMENT
     glPushMatrix()
     glTranslatef(b*math.sin(theta)/2, -b*math.cos(theta)/2, 0)
     glRotatef(theta*180/math.pi, 0.0, 0.0, 1.0)
-    drawbody(a, b/2, c)
+    drawbody(a, b/2, c, 255/255, 224/255, 189/255)
     glPopMatrix()
     glPushMatrix()
     if MOVEMENT == 1:
         glTranslatef(b*math.sin(theta), -b*math.cos(theta)-b/2, 0)
-        drawbody(a, b/2, c)
+        drawbody(a, b/2, c, rd, gr, bl)
     elif MOVEMENT == -1:
         glTranslatef(b*math.sin(theta)*3/2, -b*math.cos(theta)*3/2, 0)
         glRotatef(theta*180/math.pi, 0.0, 0.0, 1.0)
-        drawbody(a, b/2, c)
+        drawbody(a, b/2, c, rd, gr, bl)
     glPopMatrix()
 
 def draw():
@@ -129,29 +131,33 @@ def draw():
 
     glPushMatrix()
     glTranslatef(0.0, 3.0, 0)
-    drawhead()
+    drawhead(255/255, 224/255, 189/255)
     glPopMatrix()
     glPushMatrix()
-    drawbody(1, 2.5, 1)
+    drawbody(1, 1.75, 1, 0.7, 0.7, 1.0)
+    glPushMatrix()
+    glTranslatef(0, -2.5, 0)
+    drawbody(1, 0.75, 1, 0.7, 1.0, 0.7)
+    glPopMatrix()
     glPushMatrix()
     # left arm
     glTranslatef(1.25, 2.5, 0)
-    drawlimb(0.25, 3.0, 0.25, degree)
+    drawlimb(0.25, 3.0, 0.25, degree, 255/255, 224/255, 189/255)
     glPopMatrix()
     glPushMatrix()
     # right arm
     glTranslatef(-1.25, 2.5, 0)
-    drawlimb(0.25, 3.0, 0.25, -degree)
+    drawlimb(0.25, 3.0, 0.25, -degree, 255/255, 224/255, 189/255)
     glPopMatrix()
     glPushMatrix() 
     # left leg
     glTranslatef(0.75, -2.5, 0)
-    drawlimb(0.25, 5.0, 0.25, degree/2)
+    drawlimb(0.25, 5.0, 0.25, degree/2, 255/255, 224/255, 189/255)
     glPopMatrix()
     glPushMatrix() 
     #right arm
     glTranslatef(-0.75, -2.5, 0)
-    drawlimb(0.25, 5.0, 0.25, -degree/2)
+    drawlimb(0.25, 5.0, 0.25, -degree/2, 255/255, 224/255, 189/255)
     glPopMatrix()
     glPopMatrix() 
 
@@ -168,7 +174,7 @@ if __name__ == '__main__':
     glMatrixMode(GL_PROJECTION)
     glLoadIdentity()
     gluPerspective(90.0, width/height, 0.1, 300.0)
-    gluLookAt(0.0, 4.0, 4.4, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+    gluLookAt(0.0, 4.4, 4.4, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
     glutDisplayFunc(draw)
