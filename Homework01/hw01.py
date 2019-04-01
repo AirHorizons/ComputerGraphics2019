@@ -177,6 +177,9 @@ if __name__ == '__main__':
     gluLookAt(0.0, 4.4, 4.4, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
     glMatrixMode(GL_MODELVIEW)
     glLoadIdentity()
+
+    print('Press [Q] to quit')
+
     glutDisplayFunc(draw)
     glutKeyboardFunc(doKeyboard)
     glutIdleFunc(draw)
